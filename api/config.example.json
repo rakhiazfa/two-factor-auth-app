@@ -1,13 +1,14 @@
 {
   "application": {
-    "name": "Gin Boilerplate",
+    "name": "Example 2FA App",
     "host": "127.0.0.1",
-    "port": 8080
+    "port": 8080,
+    "timezone": "UTC"
   },
   "database": {
     "host": "127.0.0.1",
     "port": 5432,
-    "name": "gin_boilerplate",
+    "name": "example_2fa_app",
     "username": "postgres",
     "password": "postgres"
   }
