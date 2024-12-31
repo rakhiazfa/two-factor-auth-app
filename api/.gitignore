@@ -1,0 +1,20 @@
+# Binary files
+bin/
+
+# Vendor directory
+vendor/
+
+# IDE/editor configurations
+.idea/
+
+# Cache, test results, and profiling
+*.out
+*.prof
+
+# Environment files
+.env
+*.local
+config.json
+
+# Log files
+*.log

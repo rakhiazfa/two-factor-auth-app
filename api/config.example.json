@@ -1,0 +1,14 @@
+{
+  "application": {
+    "name": "Gin Boilerplate",
+    "host": "127.0.0.1",
+    "port": 8080
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "name": "gin_boilerplate",
+    "username": "postgres",
+    "password": "postgres"
+  }
+}
