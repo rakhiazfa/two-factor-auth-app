@@ -38,11 +38,18 @@ func (s *AuthService) SignUp(ctx context.Context, req *dtos.SignUpReq) error {
 		return err
 	}
 
+	userWithSameUsername, err := s.userRepository.FindByUsernameUnscoped(req.Username)
+	if err != nil {
+		return err
+	}
+	if userWithSameUsername != nil {
+		return utils.NewUniqueFieldError("username", "An account with this username already exists", nil)
+	}
+
 	userWithSameEmail, err := s.userRepository.FindByEmailUnscoped(req.Email)
 	if err != nil {
 		return err
 	}
-
 	if userWithSameEmail != nil {
 		return utils.NewUniqueFieldError("email", "An account with this email already exists", nil)
 	}
