@@ -25,12 +25,15 @@ func NewApplication() *gin.Engine {
 	userRepository := repositories.NewUserRepository(db)
 	authService := services.NewAuthService(db, validator, userRepository)
 	authHandler := handlers.NewAuthHandler(authService)
-	engine := routes.InitRoutes(authHandler)
+	accountHandler := handlers.NewAccountHandler()
+	engine := routes.InitRoutes(db, authHandler, accountHandler)
 	return engine
 }
 
 // wire.go:
 
 var userModule = wire.NewSet(repositories.NewUserRepository)
+
+var accountModule = wire.NewSet(handlers.NewAccountHandler)
 
 var authModule = wire.NewSet(services.NewAuthService, handlers.NewAuthHandler)

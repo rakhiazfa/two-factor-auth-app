@@ -11,5 +11,15 @@
     "name": "example_2fa_app",
     "username": "postgres",
     "password": "postgres"
+  },
+  "refresh_token": {
+    "private_key": "",
+    "public_key": "",
+    "expires_in": 10080
+  },
+  "access_token": {
+    "private_key": "",
+    "public_key": "",
+    "expires_in": 15
   }
 }

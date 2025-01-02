@@ -12,7 +12,7 @@ import (
 var customMessages = map[string]string{
 	"required": "/f is required",
 	"email":    "/f must be a valid email address",
-	"username": "/f must be a valid username",
+	"username": "invalid /f",
 	"numeric":  "/f must be a number",
 	"alphanum": "/f must contain alphanumeric characters",
 	"boolean":  "/f must be a boolean value",

@@ -23,11 +23,12 @@ func (h *AuthHandler) SignIn(c *gin.Context) {
 	var req dtos.SignInReq
 	utils.PanicIfErr(c.ShouldBind(&req))
 
-	token, err := h.authService.SignIn(c.Request.Context(), &req)
+	refreshToken, accessToken, err := h.authService.SignIn(c.Request.Context(), &req)
 	utils.PanicIfErr(err)
 
 	c.JSON(http.StatusOK, gin.H{
-		"token": token,
+		"refreshToken": refreshToken,
+		"accessToken":  accessToken,
 	})
 }
 
@@ -40,5 +41,11 @@ func (h *AuthHandler) SignUp(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Successfully created a new account.",
+	})
+}
+
+func (h *AuthHandler) SignOut(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Successfully signed out",
 	})
 }

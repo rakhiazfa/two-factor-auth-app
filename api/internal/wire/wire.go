@@ -18,6 +18,10 @@ var userModule = wire.NewSet(
 	repositories.NewUserRepository,
 )
 
+var accountModule = wire.NewSet(
+	handlers.NewAccountHandler,
+)
+
 var authModule = wire.NewSet(
 	services.NewAuthService,
 	handlers.NewAuthHandler,
@@ -28,6 +32,7 @@ func NewApplication() *gin.Engine {
 		infrastructures.NewPostgresConnection,
 		utils.NewValidator,
 		userModule,
+		accountModule,
 		authModule,
 		routes.InitRoutes,
 	)

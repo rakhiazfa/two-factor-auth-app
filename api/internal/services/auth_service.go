@@ -2,12 +2,16 @@ package services
 
 import (
 	"context"
+	"net/http"
 
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"github.com/rakhiazfa/gin-boilerplate/internal/dtos"
 	"github.com/rakhiazfa/gin-boilerplate/internal/entities"
 	"github.com/rakhiazfa/gin-boilerplate/internal/repositories"
 	"github.com/rakhiazfa/gin-boilerplate/pkg/utils"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -25,12 +29,43 @@ func NewAuthService(db *gorm.DB, validator *utils.Validator, userRepository *rep
 	}
 }
 
-func (s *AuthService) SignIn(ctx context.Context, req *dtos.SignInReq) (string, error) {
+func (s *AuthService) SignIn(ctx context.Context, req *dtos.SignInReq) (string, string, error) {
 	if err := s.validator.Validate(req); err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return "", nil
+	user, err := s.userRepository.FindByUsernameOrEmail(req.UsernameOrEmail)
+	if err != nil {
+		return "", "", err
+	}
+
+	if user == nil {
+		return "", "", utils.NewHttpError(http.StatusUnauthorized, "Unauthorized", nil)
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return "", "", utils.NewHttpError(http.StatusUnauthorized, "Unauthorized", nil)
+	}
+
+	jti := uuid.New()
+
+	refreshToken, err := utils.CreateRefreshToken(jwt.MapClaims{
+		"sub": user.ID,
+		"jti": jti,
+	})
+	if err != nil {
+		return "", "", err
+	}
+
+	accessToken, err := utils.CreateAccessToken(jwt.MapClaims{
+		"sub": user.ID,
+		"jti": jti,
+	})
+	if err != nil {
+		return "", "", err
+	}
+
+	return refreshToken, accessToken, nil
 }
 
 func (s *AuthService) SignUp(ctx context.Context, req *dtos.SignUpReq) error {

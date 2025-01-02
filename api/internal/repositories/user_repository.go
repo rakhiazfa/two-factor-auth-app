@@ -26,6 +26,20 @@ func (r *UserRepository) Save(user *entities.User) error {
 	return r.db.Save(user).Error
 }
 
+func (r *UserRepository) FindById(id uuid.UUID) (*entities.User, error) {
+	var user entities.User
+
+	if err := r.db.First(&user, "id = ?", id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (r *UserRepository) FindByUsernameUnscoped(username string, excludedIds ...uuid.UUIDs) (*entities.User, error) {
 	var user entities.User
 
@@ -68,6 +82,14 @@ func (r *UserRepository) FindByEmailUnscoped(email string, excludedIds ...uuid.U
 
 func (r *UserRepository) FindByUsernameOrEmail(usernameOrEmail string) (*entities.User, error) {
 	var user entities.User
+
+	if err := r.db.First(&user, "username = ? OR email = ?", usernameOrEmail, usernameOrEmail).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
 
 	return &user, nil
 }
