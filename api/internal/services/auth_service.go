@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -34,7 +35,7 @@ func (s *AuthService) SignIn(ctx context.Context, req *dtos.SignInReq) (string, 
 		return "", "", err
 	}
 
-	user, err := s.userRepository.FindByUsernameOrEmail(req.UsernameOrEmail)
+	user, err := s.userRepository.WithContext(ctx).FindOneByUsernameOrEmail(req.UsernameOrEmail)
 	if err != nil {
 		return "", "", err
 	}
@@ -46,6 +47,8 @@ func (s *AuthService) SignIn(ctx context.Context, req *dtos.SignInReq) (string, 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
 		return "", "", utils.NewHttpError(http.StatusUnauthorized, "Unauthorized", nil)
 	}
+
+	log.Println(user.UserDevices)
 
 	jti := uuid.New()
 
@@ -73,7 +76,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *dtos.SignUpReq) error {
 		return err
 	}
 
-	userWithSameUsername, err := s.userRepository.FindByUsernameUnscoped(req.Username)
+	userWithSameUsername, err := s.userRepository.WithContext(ctx).FindOneByUsernameUnscoped(req.Username)
 	if err != nil {
 		return err
 	}
@@ -81,7 +84,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *dtos.SignUpReq) error {
 		return utils.NewUniqueFieldError("username", "An account with this username already exists", nil)
 	}
 
-	userWithSameEmail, err := s.userRepository.FindByEmailUnscoped(req.Email)
+	userWithSameEmail, err := s.userRepository.WithContext(ctx).FindOneByEmailUnscoped(req.Email)
 	if err != nil {
 		return err
 	}
@@ -91,7 +94,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *dtos.SignUpReq) error {
 
 	var user entities.User
 
-	if err := copier.Copy(&user, &req); err != nil {
+	if err := copier.Copy(&user, req); err != nil {
 		return err
 	}
 

@@ -1,24 +1,36 @@
 package repositories
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/rakhiazfa/gin-boilerplate/internal/entities"
 	"gorm.io/gorm"
 )
 
 type UserRepository struct {
-	db *gorm.DB
+	db  *gorm.DB
+	ctx context.Context
 }
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{
-		db: db,
+		db:  db,
+		ctx: context.Background(),
 	}
 }
 
 func (r *UserRepository) WithTx(tx *gorm.DB) *UserRepository {
 	return &UserRepository{
-		db: tx,
+		db:  tx,
+		ctx: r.ctx,
+	}
+}
+
+func (r *UserRepository) WithContext(ctx context.Context) *UserRepository {
+	return &UserRepository{
+		db:  r.db,
+		ctx: ctx,
 	}
 }
 
@@ -26,7 +38,7 @@ func (r *UserRepository) Save(user *entities.User) error {
 	return r.db.Save(user).Error
 }
 
-func (r *UserRepository) FindById(id uuid.UUID) (*entities.User, error) {
+func (r *UserRepository) FindOneById(id uuid.UUID) (*entities.User, error) {
 	var user entities.User
 
 	if err := r.db.First(&user, "id = ?", id).Error; err != nil {
@@ -40,7 +52,7 @@ func (r *UserRepository) FindById(id uuid.UUID) (*entities.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) FindByUsernameUnscoped(username string, excludedIds ...uuid.UUIDs) (*entities.User, error) {
+func (r *UserRepository) FindOneByUsernameUnscoped(username string, excludedIds ...uuid.UUIDs) (*entities.User, error) {
 	var user entities.User
 
 	q := r.db.Unscoped().Where("username = ?", username)
@@ -60,7 +72,7 @@ func (r *UserRepository) FindByUsernameUnscoped(username string, excludedIds ...
 	return &user, nil
 }
 
-func (r *UserRepository) FindByEmailUnscoped(email string, excludedIds ...uuid.UUIDs) (*entities.User, error) {
+func (r *UserRepository) FindOneByEmailUnscoped(email string, excludedIds ...uuid.UUIDs) (*entities.User, error) {
 	var user entities.User
 
 	q := r.db.Unscoped().Where("email = ?", email)
@@ -80,10 +92,10 @@ func (r *UserRepository) FindByEmailUnscoped(email string, excludedIds ...uuid.U
 	return &user, nil
 }
 
-func (r *UserRepository) FindByUsernameOrEmail(usernameOrEmail string) (*entities.User, error) {
+func (r *UserRepository) FindOneByUsernameOrEmail(usernameOrEmail string) (*entities.User, error) {
 	var user entities.User
 
-	if err := r.db.First(&user, "username = ? OR email = ?", usernameOrEmail, usernameOrEmail).Error; err != nil {
+	if err := r.db.Preload("UserDevices").First(&user, "username = ? OR email = ?", usernameOrEmail, usernameOrEmail).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
