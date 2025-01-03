@@ -1,4 +1,4 @@
-package com.example2faapp
+package io.github.hiriski.rnplayground
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
