@@ -72,8 +72,8 @@ const AppEntryPoint = () => {
       await messaging().registerDeviceForRemoteMessages()
 
       // Get the token
-      const fcmToken = await messaging().getToken()
-      setFcmToken(fcmToken)
+      const FCM_TOKEN = await messaging().getToken()
+      setFcmToken(FCM_TOKEN)
 
       if (fcmToken) {
         try {

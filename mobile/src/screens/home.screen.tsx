@@ -2,7 +2,7 @@ import { ImageAssets } from '@/assets'
 import { pusher } from '@/services/pusher.service'
 import { PusherEvent } from '@pusher/pusher-websocket-react-native'
 import { useEffect } from 'react'
-import { Alert, Image, Text } from 'react-native'
+import { Alert, Image, StatusBar, Text } from 'react-native'
 import { View } from 'react-native'
 
 import { AppConfig } from '@/config'
@@ -20,6 +20,7 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <StatusBar translucent barStyle='dark-content' />
       <Text style={{ fontFamily: 'Jost', fontSize: 20, fontWeight: '500' }}>
         {AppConfig.APP_NAME}
       </Text>
