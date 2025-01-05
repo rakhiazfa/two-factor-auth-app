@@ -11,6 +11,7 @@ import (
 	"github.com/google/wire"
 	"github.com/rakhiazfa/gin-boilerplate/internal/handlers"
 	"github.com/rakhiazfa/gin-boilerplate/internal/infrastructures"
+	"github.com/rakhiazfa/gin-boilerplate/internal/repositories"
 	"github.com/rakhiazfa/gin-boilerplate/internal/services"
 	"github.com/rakhiazfa/gin-boilerplate/pkg/utils"
 	"github.com/rakhiazfa/gin-boilerplate/routes"
@@ -19,14 +20,30 @@ import (
 // Injectors from wire.go:
 
 func NewApplication() *gin.Engine {
-	validator := utils.NewValidator()
 	db := infrastructures.NewPostgresConnection()
-	authService := services.NewAuthService(db)
-	authHandler := handlers.NewAuthHandler(validator, authService)
-	engine := routes.InitRoutes(authHandler)
+	validator := utils.NewValidator()
+	userRepository := repositories.NewUserRepository(db)
+	userDeviceRepository := repositories.NewUserDeviceRepository(db)
+	userDeviceService := services.NewUserDeviceService(db, validator, userDeviceRepository)
+	app := infrastructures.NewFirebaseApp()
+	client := infrastructures.NewPusherClient()
+	twoFactorAuthSessionRepository := repositories.NewTwoFactorAuthSessionRepository(db)
+	twoFactorAuthNumberOptionRepository := repositories.NewTwoFactorAuthNumberOptionRepository(db)
+	twoFactorAuthService := services.NewTwoFactorAuthService(db, validator, app, client, twoFactorAuthSessionRepository, twoFactorAuthNumberOptionRepository)
+	authService := services.NewAuthService(db, validator, userRepository, userDeviceService, twoFactorAuthService)
+	authHandler := handlers.NewAuthHandler(authService, twoFactorAuthService)
+	accountService := services.NewAccountService(db, validator, userDeviceRepository)
+	accountHandler := handlers.NewAccountHandler(accountService)
+	engine := routes.InitRoutes(db, authHandler, accountHandler)
 	return engine
 }
 
 // wire.go:
+
+var userModule = wire.NewSet(repositories.NewUserRepository)
+
+var accountModule = wire.NewSet(services.NewAccountService, handlers.NewAccountHandler)
+
+var twoFactorAuthModule = wire.NewSet(repositories.NewUserDeviceRepository, repositories.NewTwoFactorAuthNumberOptionRepository, repositories.NewTwoFactorAuthSessionRepository, services.NewUserDeviceService, services.NewTwoFactorAuthService)
 
 var authModule = wire.NewSet(services.NewAuthService, handlers.NewAuthHandler)

@@ -3,6 +3,7 @@
     "name": "Example 2FA App",
     "host": "127.0.0.1",
     "port": 8080,
+    "key": "",
     "timezone": "UTC"
   },
   "database": {
@@ -11,5 +12,25 @@
     "name": "example_2fa_app",
     "username": "postgres",
     "password": "postgres"
+  },
+  "firebase": {
+    "service_account_file": "./firebase-admin-sdk.json"
+  },
+  "pusher": {
+    "app_id": "",
+    "key": "",
+    "secret": "",
+    "cluster": "",
+    "secure": false
+  },
+  "refresh_token": {
+    "private_key": "",
+    "public_key": "",
+    "expires_in": 10080
+  },
+  "access_token": {
+    "private_key": "",
+    "public_key": "",
+    "expires_in": 60
   }
 }

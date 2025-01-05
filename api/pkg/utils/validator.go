@@ -12,7 +12,7 @@ import (
 var customMessages = map[string]string{
 	"required": "/f is required",
 	"email":    "/f must be a valid email address",
-	"username": "/f must be a valid username",
+	"username": "invalid /f",
 	"numeric":  "/f must be a number",
 	"alphanum": "/f must contain alphanumeric characters",
 	"boolean":  "/f must be a boolean value",
@@ -21,6 +21,7 @@ var customMessages = map[string]string{
 	"max":      "/f must not exceed /p characters",
 	"gte":      "/f must be at least /p",
 	"lte":      "/f must be at most /p",
+	"eqfield":  "/f must be the same as the /p field",
 }
 
 type Validator struct {
@@ -60,6 +61,10 @@ func FormatValidationErrors(errors validator.ValidationErrors) map[string]string
 		field := LcFirst(err.Field())
 		tag := err.Tag()
 		param := err.Param()
+
+		if tag == "eqfield" {
+			param = LcFirst(param)
+		}
 
 		msgTemplate := customMessages[tag]
 

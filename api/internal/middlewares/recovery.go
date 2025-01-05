@@ -41,8 +41,15 @@ func handleHttpError(c *gin.Context, err *utils.HttpError) {
 			"errors": utils.FormatValidationErrors(validationErrors),
 		})
 	} else {
+		var errReason *string
+
+		if err.Reason != nil {
+			errReason = utils.ToPointer(err.Reason.Error())
+		}
+
 		c.AbortWithStatusJSON(err.StatusCode, gin.H{
 			"message": err.Message,
+			"reason":  errReason,
 		})
 	}
 }
