@@ -19,6 +19,7 @@ RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /app/bin/api ./bin/api
 COPY --from=builder /app/config.json ./
+COPY --from=builder /app/firebase-admin-sdk.json ./
 
 ENV GIN_MODE=release
 
