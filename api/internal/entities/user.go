@@ -15,20 +15,20 @@ type User struct {
 	UserDevices    []UserDevice `gorm:"foreignKey:UserId;references:ID"`
 }
 
-func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	if u.Password != "" {
-		hash, err := u.HashPassword(u.Password)
+func (m *User) BeforeCreate(tx *gorm.DB) (err error) {
+	if m.Password != "" {
+		hash, err := m.HashPassword(m.Password)
 		if err != nil {
 			return err
 		}
 
-		u.Password = hash
+		m.Password = hash
 	}
 
 	return
 }
 
-func (u *User) HashPassword(password string) (string, error) {
+func (m *User) HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err

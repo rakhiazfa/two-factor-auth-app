@@ -22,7 +22,8 @@ func NewPostgresConnection() *gorm.DB {
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger:                 logger.Default.LogMode(logger.Info),
+		SkipDefaultTransaction: true,
 	})
 	if err != nil {
 		log.Fatal("Failed to initialize postgres connection: ", err)

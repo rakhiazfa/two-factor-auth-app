@@ -13,4 +13,7 @@ func initAuthRoutes(r *gin.RouterGroup, handler *handlers.AuthHandler, db *gorm.
 	group.POST("/sign-in", handler.SignIn)
 	group.POST("/sign-up", handler.SignUp)
 	group.POST("/sign-out", middlewares.RequiresAuth(db), handler.SignOut)
+
+	group.POST("/sessions/:sessionId/send-option-numbers", handler.SendOptionNumbers2FA)
+	group.POST("/sessions/:sessionId/verify-option", middlewares.RequiresAuth(db), handler.Verify2FANumber)
 }

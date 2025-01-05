@@ -19,7 +19,16 @@ var userModule = wire.NewSet(
 )
 
 var accountModule = wire.NewSet(
+	services.NewAccountService,
 	handlers.NewAccountHandler,
+)
+
+var twoFactorAuthModule = wire.NewSet(
+	repositories.NewUserDeviceRepository,
+	repositories.NewTwoFactorAuthNumberOptionRepository,
+	repositories.NewTwoFactorAuthSessionRepository,
+	services.NewUserDeviceService,
+	services.NewTwoFactorAuthService,
 )
 
 var authModule = wire.NewSet(
@@ -30,9 +39,12 @@ var authModule = wire.NewSet(
 func NewApplication() *gin.Engine {
 	wire.Build(
 		infrastructures.NewPostgresConnection,
+		infrastructures.NewFirebaseApp,
+		infrastructures.NewPusherClient,
 		utils.NewValidator,
 		userModule,
 		accountModule,
+		twoFactorAuthModule,
 		authModule,
 		routes.InitRoutes,
 	)

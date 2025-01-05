@@ -11,4 +11,8 @@ func initAccountRoutes(r *gin.RouterGroup, handler *handlers.AccountHandler, db 
 	group := r.Group("/account", middlewares.RequiresAuth(db))
 
 	group.GET("", handler.FindAccount)
+	group.PUT("", handler.UpdateAccount)
+
+	group.GET("/devices", handler.FindAccountDevices)
+	group.DELETE("/devices/:id", handler.RemoveAccountDevice)
 }

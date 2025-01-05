@@ -11,10 +11,11 @@ vendor/
 *.out
 *.prof
 
-# Environment files
+# Environment files / configuration
 .env
 *.local
 config.json
+firebase-admin-sdk.json
 
 # Log files
 *.log

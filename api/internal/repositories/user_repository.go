@@ -9,28 +9,24 @@ import (
 )
 
 type UserRepository struct {
-	db  *gorm.DB
-	ctx context.Context
+	db *gorm.DB
 }
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{
-		db:  db,
-		ctx: context.Background(),
+		db: db,
 	}
 }
 
 func (r *UserRepository) WithTx(tx *gorm.DB) *UserRepository {
 	return &UserRepository{
-		db:  tx,
-		ctx: r.ctx,
+		db: tx,
 	}
 }
 
 func (r *UserRepository) WithContext(ctx context.Context) *UserRepository {
 	return &UserRepository{
-		db:  r.db,
-		ctx: ctx,
+		db: r.db.WithContext(ctx),
 	}
 }
 

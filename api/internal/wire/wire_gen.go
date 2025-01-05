@@ -23,9 +23,17 @@ func NewApplication() *gin.Engine {
 	db := infrastructures.NewPostgresConnection()
 	validator := utils.NewValidator()
 	userRepository := repositories.NewUserRepository(db)
-	authService := services.NewAuthService(db, validator, userRepository)
-	authHandler := handlers.NewAuthHandler(authService)
-	accountHandler := handlers.NewAccountHandler()
+	userDeviceRepository := repositories.NewUserDeviceRepository(db)
+	userDeviceService := services.NewUserDeviceService(db, validator, userDeviceRepository)
+	app := infrastructures.NewFirebaseApp()
+	client := infrastructures.NewPusherClient()
+	twoFactorAuthSessionRepository := repositories.NewTwoFactorAuthSessionRepository(db)
+	twoFactorAuthNumberOptionRepository := repositories.NewTwoFactorAuthNumberOptionRepository(db)
+	twoFactorAuthService := services.NewTwoFactorAuthService(db, validator, app, client, twoFactorAuthSessionRepository, twoFactorAuthNumberOptionRepository)
+	authService := services.NewAuthService(db, validator, userRepository, userDeviceService, twoFactorAuthService)
+	authHandler := handlers.NewAuthHandler(authService, twoFactorAuthService)
+	accountService := services.NewAccountService(db, validator, userDeviceRepository)
+	accountHandler := handlers.NewAccountHandler(accountService)
 	engine := routes.InitRoutes(db, authHandler, accountHandler)
 	return engine
 }
@@ -34,6 +42,8 @@ func NewApplication() *gin.Engine {
 
 var userModule = wire.NewSet(repositories.NewUserRepository)
 
-var accountModule = wire.NewSet(handlers.NewAccountHandler)
+var accountModule = wire.NewSet(services.NewAccountService, handlers.NewAccountHandler)
+
+var twoFactorAuthModule = wire.NewSet(repositories.NewUserDeviceRepository, repositories.NewTwoFactorAuthNumberOptionRepository, repositories.NewTwoFactorAuthSessionRepository, services.NewUserDeviceService, services.NewTwoFactorAuthService)
 
 var authModule = wire.NewSet(services.NewAuthService, handlers.NewAuthHandler)
