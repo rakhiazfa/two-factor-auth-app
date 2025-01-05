@@ -1,0 +1,12 @@
+# Binary files
+bin/
+
+# IDE/editor configurations
+.idea/
+
+# Cache, test results, and profiling
+*.out
+*.prof
+
+# Log files
+*.log
