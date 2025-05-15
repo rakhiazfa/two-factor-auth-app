@@ -14,8 +14,9 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'Example2FAApp' do
+target 'TwoFactorAuthApp' do
   config = use_native_modules!
+  use_frameworks! :linkage => :static
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -23,7 +24,7 @@ target 'Example2FAApp' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'Example2FAAppTests' do
+  target 'TwoFactorAuthAppTests' do
     inherit! :complete
     # Pods for testing
   end

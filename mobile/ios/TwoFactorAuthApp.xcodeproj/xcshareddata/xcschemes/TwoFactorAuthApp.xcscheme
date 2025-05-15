@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Example2FAApp.app"
-               BlueprintName = "Example2FAApp"
-               ReferencedContainer = "container:Example2FAApp.xcodeproj">
+               BuildableName = "TwoFactorAuthApp.app"
+               BlueprintName = "TwoFactorAuthApp"
+               ReferencedContainer = "container:TwoFactorAuthApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "Example2FAAppTests.xctest"
-               BlueprintName = "Example2FAAppTests"
-               ReferencedContainer = "container:Example2FAApp.xcodeproj">
+               BuildableName = "TwoFactorAuthAppTests.xctest"
+               BlueprintName = "TwoFactorAuthAppTests"
+               ReferencedContainer = "container:TwoFactorAuthApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Example2FAApp.app"
-            BlueprintName = "Example2FAApp"
-            ReferencedContainer = "container:Example2FAApp.xcodeproj">
+            BuildableName = "TwoFactorAuthApp.app"
+            BlueprintName = "TwoFactorAuthApp"
+            ReferencedContainer = "container:TwoFactorAuthApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Example2FAApp.app"
-            BlueprintName = "Example2FAApp"
-            ReferencedContainer = "container:Example2FAApp.xcodeproj">
+            BuildableName = "TwoFactorAuthApp.app"
+            BlueprintName = "TwoFactorAuthApp"
+            ReferencedContainer = "container:TwoFactorAuthApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
